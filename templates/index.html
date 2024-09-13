@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Service Manager</h1>
+        <div id="services">
+            {% for service in services %}
+            <div class="service">
+                <h2>{{ service }}</h2>
+                <p>Status: <span class="status" id="status-{{ service }}">Unknown</span></p>
+                <button onclick="startService('{{ service }}')">Start</button>
+                <button onclick="stopService('{{ service }}')">Stop</button>
+                <button onclick="checkStatus('{{ service }}')">Check Status</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        function startService(service) {
+            fetch(`/start/${service}`)
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    checkStatus(service);
+                });
+        }
+
+        function stopService(service) {
+            fetch(`/stop/${service}`)
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    checkStatus(service);
+                });
+        }
+
+        function checkStatus(service) {
+            fetch(`/status/${service}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById(`status-${service}`).textContent = data.status;
+                });
+        }
+
+        // Check status of all services on page load
+        document.addEventListener('DOMContentLoaded', (event) => {
+            {% for service in services %}
+            checkStatus('{{ service }}');
+            {% endfor %}
+        });
+    </script>
+</body>
+</html>

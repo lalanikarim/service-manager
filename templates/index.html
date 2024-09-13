@@ -11,13 +11,15 @@
         <h1>Service Manager</h1>
         <div id="services">
             {% for service_name, description in services %}
-            <div class="service">
+            <div class="service" id="service-{{ service_name }}">
                 <h2>{{ description }}</h2>
                 <p>Service: {{ service_name }}</p>
                 <p>Status: <span class="status" id="status-{{ service_name }}">Unknown</span></p>
-                <button onclick="startService('{{ service_name }}')">Start</button>
-                <button onclick="stopService('{{ service_name }}')">Stop</button>
-                <button onclick="checkStatus('{{ service_name }}')">Check Status</button>
+                <div class="button-container">
+                    <button class="start-button" onclick="startService('{{ service_name }}')" style="display: none;">Start</button>
+                    <button class="stop-button" onclick="stopService('{{ service_name }}')" style="display: none;">Stop</button>
+                    <button onclick="refreshStatus('{{ service_name }}')">Refresh Status</button>
+                </div>
             </div>
             {% endfor %}
         </div>
@@ -28,7 +30,7 @@
                 .then(response => response.json())
                 .then(data => {
                     alert(data.message);
-                    checkStatus(service);
+                    refreshStatus(service);
                 });
         }
 
@@ -37,22 +39,38 @@
                 .then(response => response.json())
                 .then(data => {
                     alert(data.message);
-                    checkStatus(service);
+                    refreshStatus(service);
                 });
         }
 
-        function checkStatus(service) {
+        function refreshStatus(service) {
             fetch(`/status/${service}`)
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById(`status-${service}`).textContent = data.status;
+                    const statusElement = document.getElementById(`status-${service}`);
+                    statusElement.textContent = data.status;
+                    updateButtons(service, data.status);
                 });
+        }
+
+        function updateButtons(service, status) {
+            const serviceElement = document.getElementById(`service-${service}`);
+            const startButton = serviceElement.querySelector('.start-button');
+            const stopButton = serviceElement.querySelector('.stop-button');
+
+            if (status === 'active') {
+                startButton.style.display = 'none';
+                stopButton.style.display = 'inline-block';
+            } else {
+                startButton.style.display = 'inline-block';
+                stopButton.style.display = 'none';
+            }
         }
 
         // Check status of all services on page load
         document.addEventListener('DOMContentLoaded', (event) => {
             {% for service_name, _ in services %}
-            checkStatus('{{ service_name }}');
+            refreshStatus('{{ service_name }}');
             {% endfor %}
         });
     </script>

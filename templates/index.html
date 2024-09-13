@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Service Manager</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
@@ -14,12 +15,12 @@
             <div class="service" id="service-{{ service_name }}">
                 <h2>{{ description }}</h2>
                 <p>Service: {{ service_name }}</p>
-                <p>Status: <span class="status" id="status-{{ service_name }}">Unknown</span></p>
-                <div class="button-container">
-                    <button class="start-button" onclick="startService('{{ service_name }}')" style="display: none;">Start</button>
-                    <button class="stop-button" onclick="stopService('{{ service_name }}')" style="display: none;">Stop</button>
-                    <button onclick="refreshStatus('{{ service_name }}')">Refresh Status</button>
-                </div>
+                <p class="status-line">
+                    Status: <span class="status" id="status-{{ service_name }}">Unknown</span>
+                    <i class="fas fa-play action-icon start-icon" onclick="startService('{{ service_name }}')" title="Start Service"></i>
+                    <i class="fas fa-stop action-icon stop-icon" onclick="stopService('{{ service_name }}')" title="Stop Service"></i>
+                    <i class="fas fa-sync-alt action-icon refresh-icon" onclick="refreshStatus('{{ service_name }}')" title="Refresh Status"></i>
+                </p>
             </div>
             {% endfor %}
         </div>
@@ -49,21 +50,26 @@
                 .then(data => {
                     const statusElement = document.getElementById(`status-${service}`);
                     statusElement.textContent = data.status;
-                    updateButtons(service, data.status);
+                    updateIcons(service, data.status);
                 });
         }
 
-        function updateButtons(service, status) {
+        function updateIcons(service, status) {
             const serviceElement = document.getElementById(`service-${service}`);
-            const startButton = serviceElement.querySelector('.start-button');
-            const stopButton = serviceElement.querySelector('.stop-button');
+            const startIcon = serviceElement.querySelector('.start-icon');
+            const stopIcon = serviceElement.querySelector('.stop-icon');
+            const statusElement = serviceElement.querySelector('.status');
 
             if (status === 'active') {
-                startButton.style.display = 'none';
-                stopButton.style.display = 'inline-block';
+                startIcon.style.display = 'none';
+                stopIcon.style.display = 'inline-block';
+                statusElement.classList.remove('inactive');
+                statusElement.classList.add('active');
             } else {
-                startButton.style.display = 'inline-block';
-                stopButton.style.display = 'none';
+                startIcon.style.display = 'inline-block';
+                stopIcon.style.display = 'none';
+                statusElement.classList.remove('active');
+                statusElement.classList.add('inactive');
             }
         }
 

@@ -17,6 +17,58 @@ h1 {
     color: #333;
 }
 
-p {
-    color: #666;
+h2 {
+    color: #444;
+    margin-bottom: 5px;
+}
+
+.service {
+    background: #fff;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.status-line {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.status {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.status.active {
+    color: #28a745;
+}
+
+.status.inactive {
+    color: #dc3545;
+}
+
+.action-icon {
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 1.2em;
+    color: #007bff;
+    transition: color 0.3s ease;
+}
+
+.action-icon:hover {
+    color: #0056b3;
+}
+
+.start-icon {
+    color: #28a745;
+}
+
+.stop-icon {
+    color: #dc3545;
+}
+
+.refresh-icon {
+    color: #17a2b8;
 }

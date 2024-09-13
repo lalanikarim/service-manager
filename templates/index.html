@@ -25,12 +25,22 @@
             {% endfor %}
         </div>
     </div>
+    <div id="toaster" class="toaster"></div>
     <script>
+        function showToast(message) {
+            const toaster = document.getElementById('toaster');
+            toaster.textContent = message || 'Success';
+            toaster.classList.add('show');
+            setTimeout(() => {
+                toaster.classList.remove('show');
+            }, 5000);
+        }
+
         function startService(service) {
             fetch(`/start/${service}`)
                 .then(response => response.json())
                 .then(data => {
-                    alert(data.message);
+                    showToast(data.message);
                     refreshStatus(service);
                 });
         }
@@ -39,7 +49,7 @@
             fetch(`/stop/${service}`)
                 .then(response => response.json())
                 .then(data => {
-                    alert(data.message);
+                    showToast(data.message);
                     refreshStatus(service);
                 });
         }
@@ -48,29 +58,14 @@
             fetch(`/status/${service}`)
                 .then(response => response.json())
                 .then(data => {
-                    const statusElement = document.getElementById(`status-${service}`);
-                    statusElement.textContent = data.status;
-                    updateIcons(service, data.status);
+                    updateStatus(service, data.status);
                 });
         }
 
-        function updateIcons(service, status) {
-            const serviceElement = document.getElementById(`service-${service}`);
-            const startIcon = serviceElement.querySelector('.start-icon');
-            const stopIcon = serviceElement.querySelector('.stop-icon');
-            const statusElement = serviceElement.querySelector('.status');
-
-            if (status === 'active') {
-                startIcon.style.display = 'none';
-                stopIcon.style.display = 'inline-block';
-                statusElement.classList.remove('inactive');
-                statusElement.classList.add('active');
-            } else {
-                startIcon.style.display = 'inline-block';
-                stopIcon.style.display = 'none';
-                statusElement.classList.remove('active');
-                statusElement.classList.add('inactive');
-            }
+        function updateStatus(service, status) {
+            const statusElement = document.getElementById(`status-${service}`);
+            statusElement.textContent = status;
+            statusElement.className = 'status ' + status;
         }
 
         // Check status of all services on page load

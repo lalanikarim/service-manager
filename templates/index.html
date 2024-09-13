@@ -16,10 +16,10 @@
                 <h2>{{ description }}</h2>
                 <p>Service: {{ service_name }}</p>
                 <p class="status-line">
-                    Status: <span class="status clickable" id="status-{{ service_name }}" title="Refresh Status">Unknown</span>
+                    Status: <span class="status clickable" id="status-{{ service_name }}" onclick="refreshStatus('{{ service_name }}')" title="Refresh Status">Unknown</span>
                     <i class="fas fa-play action-icon start-icon" onclick="startService('{{ service_name }}')" title="Start Service"></i>
                     <i class="fas fa-stop action-icon stop-icon" onclick="stopService('{{ service_name }}')" title="Stop Service"></i>
-                    <i class="fas fa-sync-alt action-icon refresh-icon" id="refresh-{{ service_name }}" title="Restart Service"></i>
+                    <i class="fas fa-sync-alt action-icon refresh-icon" id="refresh-{{ service_name }}" onclick="restartService('{{ service_name }}')" title="Restart Service"></i>
                 </p>
             </div>
             {% endfor %}

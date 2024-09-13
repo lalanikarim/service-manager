@@ -11,17 +11,19 @@ SERVICES = os.getenv('SERVICES', '').split(',')
 HOST = os.getenv('HOST', '127.0.0.1')
 PORT = int(os.getenv('PORT', 5000))
 
-def run_systemctl_command(command, service):
+def run_systemctl_command(command, service, *args):
     try:
-        result = subprocess.run(['systemctl', '--user', command, service], 
-                                capture_output=True, text=True, check=True)
+        cmd = ['systemctl', '--user', command, service] + list(args)
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
         return True, result.stdout.strip()
     except subprocess.CalledProcessError as e:
         return False, e.stderr.strip()
 
 def get_service_description(service):
-    _, description = run_systemctl_command('show', f'{service} --property=Description')
-    return description.split('=')[-1] if '=' in description else 'No description available'
+    success, description = run_systemctl_command('show', service, '--property=Description')
+    if success:
+        return description.split('=', 1)[-1].strip()
+    return 'No description available'
 
 @app.route('/')
 def home():

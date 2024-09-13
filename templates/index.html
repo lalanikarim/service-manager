@@ -10,14 +10,14 @@
     <div class="container">
         <h1>Service Manager</h1>
         <div id="services">
-            {% for service in services %}
+            {% for service_name, description in services %}
             <div class="service">
-                <h2>{{ service.name }}</h2>
-                <p>Description: {{ service.description }}</p>
-                <p>Status: <span class="status" id="status-{{ service.name }}">Unknown</span></p>
-                <button onclick="startService('{{ service.name }}')">Start</button>
-                <button onclick="stopService('{{ service.name }}')">Stop</button>
-                <button onclick="checkStatus('{{ service.name }}')">Check Status</button>
+                <h2>{{ service_name }}</h2>
+                <p>Description: {{ description }}</p>
+                <p>Status: <span class="status" id="status-{{ service_name }}">Unknown</span></p>
+                <button onclick="startService('{{ service_name }}')">Start</button>
+                <button onclick="stopService('{{ service_name }}')">Stop</button>
+                <button onclick="checkStatus('{{ service_name }}')">Check Status</button>
             </div>
             {% endfor %}
         </div>
@@ -51,8 +51,8 @@
 
         // Check status of all services on page load
         document.addEventListener('DOMContentLoaded', (event) => {
-            {% for service in services %}
-            checkStatus('{{ service.name }}');
+            {% for service_name, _ in services %}
+            checkStatus('{{ service_name }}');
             {% endfor %}
         });
     </script>

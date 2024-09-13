@@ -15,13 +15,22 @@ def run_systemctl_command(command, service):
     try:
         result = subprocess.run(['systemctl', '--user', command, service], 
                                 capture_output=True, text=True, check=True)
-        return True, result.stdout
+        return True, result.stdout.strip()
     except subprocess.CalledProcessError as e:
-        return False, e.stderr
+        return False, e.stderr.strip()
+
+def get_service_info(service):
+    _, name = run_systemctl_command('show', f'{service} --property=Description')
+    _, description = run_systemctl_command('show', f'{service} --property=Description')
+    return {
+        'name': name.split('=')[-1] if '=' in name else service,
+        'description': description.split('=')[-1] if '=' in description else 'No description available'
+    }
 
 @app.route('/')
 def home():
-    return render_template('index.html', services=SERVICES)
+    service_info = [get_service_info(service) for service in SERVICES]
+    return render_template('index.html', services=service_info)
 
 @app.route('/start/<service>')
 def start_service(service):

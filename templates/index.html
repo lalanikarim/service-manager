@@ -12,8 +12,8 @@
         <div id="services">
             {% for service_name, description in services %}
             <div class="service">
-                <h2>{{ service_name }}</h2>
-                <p>Description: {{ description }}</p>
+                <h2>{{ description }}</h2>
+                <p>Service: {{ service_name }}</p>
                 <p>Status: <span class="status" id="status-{{ service_name }}">Unknown</span></p>
                 <button onclick="startService('{{ service_name }}')">Start</button>
                 <button onclick="stopService('{{ service_name }}')">Stop</button>

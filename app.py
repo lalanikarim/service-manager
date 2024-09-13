@@ -46,5 +46,10 @@ def service_status(service):
     status = 'active' if success else 'inactive'
     return jsonify({'status': status, 'message': message})
 
+@app.route('/restart/<service>')
+def restart_service(service):
+    success, message = run_systemctl_command('restart', service)
+    return jsonify({'success': success, 'message': message})
+
 if __name__ == '__main__':
     app.run(host=HOST, port=PORT, debug=True)

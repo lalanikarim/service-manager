@@ -25,6 +25,15 @@ function stopService(service) {
         });
 }
 
+function restartService(service) {
+    fetch(`/restart/${service}`)
+        .then(response => response.json())
+        .then(data => {
+            showToast(data.message);
+            refreshStatus(service);
+        });
+}
+
 function refreshStatus(service) {
     fetch(`/status/${service}`)
         .then(response => response.json())
@@ -45,5 +54,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
     services.forEach(service => {
         const serviceName = service.id.replace('service-', '');
         refreshStatus(serviceName);
+
+        // Add click event listener to status element
+        const statusElement = document.getElementById(`status-${serviceName}`);
+        statusElement.addEventListener('click', () => refreshStatus(serviceName));
+
+        // Add click event listener to refresh icon
+        const refreshIcon = document.getElementById(`refresh-${serviceName}`);
+        refreshIcon.addEventListener('click', () => restartService(serviceName));
     });
 });

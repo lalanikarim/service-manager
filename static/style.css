@@ -36,8 +36,14 @@ h2 {
     margin-top: 10px;
 }
 
+.status-line::after {
+    content: "\00a0"; /* Non-breaking space */
+    white-space: pre; /* Preserve the space */
+}
+
 .status {
     font-weight: bold;
+    margin-left: 5px;
     margin-right: 10px;
 }
 

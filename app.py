@@ -8,6 +8,8 @@ load_dotenv()
 app = Flask(__name__)
 
 SERVICES = os.getenv('SERVICES', '').split(',')
+HOST = os.getenv('HOST', '127.0.0.1')
+PORT = int(os.getenv('PORT', 5000))
 
 def run_systemctl_command(command, service):
     try:
@@ -38,4 +40,4 @@ def service_status(service):
     return jsonify({'status': status, 'message': message})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host=HOST, port=PORT, debug=True)

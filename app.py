@@ -3,6 +3,7 @@ import subprocess
 from dotenv import load_dotenv
 import os
 import uvicorn
+from asgiref.wsgi import WsgiToAsgi
 
 load_dotenv()
 
@@ -52,5 +53,7 @@ def restart_service(service):
     success, message = run_systemctl_command('restart', service)
     return jsonify({'success': success, 'message': message})
 
+asgi_app = WsgiToAsgi(app)
+
 if __name__ == '__main__':
-    uvicorn.run(app, host=HOST, port=PORT)
+    uvicorn.run(asgi_app, host=HOST, port=PORT)

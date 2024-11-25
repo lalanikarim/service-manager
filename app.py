@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, request
 import subprocess
 from dotenv import load_dotenv
 import os
+import uvicorn
 
 load_dotenv()
 
@@ -52,4 +53,4 @@ def restart_service(service):
     return jsonify({'success': success, 'message': message})
 
 if __name__ == '__main__':
-    app.run(host=HOST, port=PORT, debug=True)
+    uvicorn.run(app, host=HOST, port=PORT)
